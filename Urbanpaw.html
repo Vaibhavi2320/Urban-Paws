@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Urban Paws</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f8f9fa;
+}
+
+/* Header */
+header {
+    background: #0d47a1;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Navigation */
+nav {
+    background: #1565c0;
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Hero */
+.hero {
+    background: url('https://images.unsplash.com/photo-1518717758536-85ae29035b6d');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    background: orange;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background: darkorange;
+}
+
+/* Sections */
+section {
+    padding: 40px;
+    text-align: center;
+}
+
+.box {
+    display: inline-block;
+    width: 250px;
+    margin: 15px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Form */
+input, select {
+    width: 80%;
+    max-width: 400px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Booking Table */
+table {
+    width: 95%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background: #1565c0;
+    color: white;
+}
+
+.edit-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* Contact */
+.contact {
+    background: #f4f4f4;
+}
+
+/* WhatsApp */
+.whatsapp {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+/* Footer */
+footer {
+    background: #0d47a1;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+</style>
+
+<script>
+
+/* Store bookings */
+let bookings = JSON.parse(localStorage.getItem("urbanPawsBookings")) || [];
+
+/* INSERT */
+function addBooking() {
+
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let dog = document.getElementById("dog").value;
+    let service = document.getElementById("service").value;
+
+    if (name === "" || phone === "" || dog === "" || service === "") {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    let booking = {
+        id: Date.now(),
+        name: name,
+        phone: phone,
+        dog: dog,
+        service: service
+    };
+
+    bookings.push(booking);
+
+    localStorage.setItem(
+        "urbanPawsBookings",
+        JSON.stringify(bookings)
+    );
+
+    alert("Booking added successfully!");
+
+    clearForm();
+    displayBookings();
+}
+
+
+/* VIEW */
+function displayBookings() {
+
+    let tableBody = document.getElementById("bookingTableBody");
+
+    tableBody.innerHTML = "";
+
+    bookings.forEach(function(booking) {
+
+        let row = `
+            <tr>
+                <td>${booking.id}</td>
+                <td>${booking.name}</td>
+                <td>${booking.phone}</td>
+                <td>${booking.dog}</td>
+                <td>${booking.service}</td>
+
+                <td>
+                    <button class="edit-btn"
+                    onclick="editBooking(${booking.id})">
+                    Edit
+                    </button>
+
+                    <button class="delete-btn"
+                    onclick="deleteBooking(${booking.id})">
+                    Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        tableBody.innerHTML += row;
+    });
+}
+
+
+/* UPDATE */
+function editBooking(id) {
+
+    let booking = bookings.find(function(item) {
+        return item.id === id;
+    });
+
+    if (!booking) {
+        return;
+    }
+
+    document.getElementById("name").value = booking.name;
+    document.getElementById("phone").value = booking.phone;
+    document.getElementById("dog").value = booking.dog;
+    document.getElementById("service").value = booking.service;
+
+    document.getElementById("updateId").value = id;
+
+    document.getElementById("addButton").style.display = "none";
+    document.getElementById("updateButton").style.display = "inline-block";
+
+    window.location.href = "#booking";
+}
+
+
+/* UPDATE BOOKING */
+function updateBooking() {
+
+    let id = Number(document.getElementById("updateId").value);
+
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let dog = document.getElementById("dog").value;
+    let service = document.getElementById("service").value;
+
+    if (name === "" || phone === "" || dog === "" || service === "") {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    let booking = bookings.find(function(item) {
+        return item.id === id;
+    });
+
+    if (booking) {
+
+        booking.name = name;
+        booking.phone = phone;
+        booking.dog = dog;
+        booking.service = service;
+
+        localStorage.setItem(
+            "urbanPawsBookings",
+            JSON.stringify(bookings)
+        );
+
+        alert("Booking updated successfully!");
+
+        clearForm();
+        displayBookings();
+
+        document.getElementById("addButton").style.display = "inline-block";
+        document.getElementById("updateButton").style.display = "none";
+    }
+}
+
+
+/* DELETE */
+function deleteBooking(id) {
+
+    let confirmDelete = confirm(
+        "Are you sure you want to delete this booking?"
+    );
+
+    if (confirmDelete) {
+
+        bookings = bookings.filter(function(item) {
+            return item.id !== id;
+        });
+
+        localStorage.setItem(
+            "urbanPawsBookings",
+            JSON.stringify(bookings)
+        );
+
+        alert("Booking deleted successfully!");
+
+        displayBookings();
+    }
+}
+
+
+/* Clear form */
+function clearForm() {
+
+    document.getElementById("name").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("dog").value = "";
+    document.getElementById("service").value = "";
+
+    document.getElementById("updateId").value = "";
+}
+
+
+/* WhatsApp Booking */
+function bookNow() {
+
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let dog = document.getElementById("dog").value;
+    let service = document.getElementById("service").value;
+
+    if (name === "" || phone === "" || dog === "") {
+        alert("Please fill your name, phone and dog name.");
+        return;
+    }
+
+    let message = `Hello Urban Paws!
+Name: ${name}
+Phone: ${phone}
+Dog: ${dog}
+Service: ${service}`;
+
+    let url =
+    "https://wa.me/918779962965?text="
+    + encodeURIComponent(message);
+
+    window.open(url, "_blank");
+}
+
+
+/* Load bookings when page opens */
+window.onload = function() {
+    displayBookings();
+};
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Urban Paws</h1>
+
+<h2>Vaibhavi Bhosale</h2>
+
+<p>City Walks, Happy Paws</p>
+
+</header>
+
+
+<nav>
+
+<a href="#">Home</a>
+
+<a href="#services">Services</a>
+
+<a href="#booking">Booking</a>
+
+<a href="#manage">Manage Bookings</a>
+
+<a href="#contact">Contact</a>
+
+</nav>
+
+
+<div class="hero">
+
+<h1>Premium Dog Walking Services</h1>
+
+<p>Book instantly & pay online</p>
+
+</div>
+
+
+<section id="services">
+
+<h2>Our Services</h2>
+
+
+<div class="box">
+
+<h3>Daily Walk</h3>
+
+<p>₹199 per walk</p>
+
+</div>
+
+
+<div class="box">
+
+<h3>Weekly Plan</h3>
+
+<p>₹999 per week</p>
+
+</div>
+
+</section>
+
+
+<section id="booking">
+
+<h2>Book Now</h2>
+
+
+<input
+id="name"
+type="text"
+placeholder="Your Name">
+<br>
+
+
+<input
+id="phone"
+type="text"
+placeholder="Phone">
+<br>
+
+
+<input
+id="dog"
+type="text"
+placeholder="Dog Name">
+<br>
+
+
+<select id="service">
+
+<option value="">Select Service</option>
+
+<option value="Daily Walk - ₹199">
+Daily Walk - ₹199
+</option>
+
+<option value="Weekly Plan - ₹999">
+Weekly Plan - ₹999
+</option>
+
+</select>
+
+<br>
+
+
+<input
+type="hidden"
+id="updateId">
+
+
+<button
+id="addButton"
+class="btn"
+onclick="addBooking()">
+
+Insert Booking
+
+</button>
+
+
+<button
+id="updateButton"
+class="btn"
+onclick="updateBooking()"
+style="display:none;">
+
+Update Booking
+
+</button>
+
+
+<br><br>
+
+
+<button
+class="btn"
+onclick="bookNow()">
+
+Book via WhatsApp
+
+</button>
+
+</section>
+
+
+<section id="manage">
+
+<h2>Manage Bookings</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Phone</th>
+
+<th>Dog Name</th>
+
+<th>Service</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="bookingTableBody">
+
+</tbody>
+
+</table>
+
+</section>
+
+
+<section id="contact" class="contact">
+
+<h2>Contact Us</h2>
+
+<p>📞 8779962965</p>
+
+<p>📧 bhosalevaibhavi461@gmail.com</p>
+
+<p>📍 Mumbai</p>
+
+</section>
+
+
+<a
+class="whatsapp"
+href="https://wa.me/918779962965">
+
+💬
+
+</a>
+
+
+<footer>
+
+<p>© 2026 Urban Paws</p>
+
+</footer>
+
+</body>
+
+</html>
