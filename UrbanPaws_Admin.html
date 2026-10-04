@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urban Paws - Admin</title>
+
+<style>
+body{font-family:Arial;margin:0;background:#f8f9fa}
+header{background:#0d47a1;color:white;text-align:center;padding:20px}
+nav{background:#1565c0;padding:10px;text-align:center}
+nav a{color:white;margin:15px;text-decoration:none;font-weight:bold}
+.hero{background:url('https://images.unsplash.com/photo-1518717758536-85ae29035b6d');background-size:cover;background-position:center;color:white;text-align:center;padding:100px 20px}
+.btn{padding:10px 20px;background:orange;border:none;color:white;cursor:pointer;border-radius:5px}
+.btn:hover{background:darkorange}
+section{padding:40px;text-align:center}
+.box{display:inline-block;width:250px;margin:15px;padding:20px;background:white;box-shadow:0 0 10px rgba(0,0,0,.1)}
+input,select{width:80%;max-width:400px;padding:10px;margin:10px;border:1px solid #ccc;border-radius:5px;box-sizing:border-box}
+table{width:95%;margin:30px auto;border-collapse:collapse;background:white}
+th,td{border:1px solid #ddd;padding:12px;text-align:center}
+th{background:#1565c0;color:white}
+.edit-btn{background:#28a745;color:white;border:none;padding:7px 12px;cursor:pointer;border-radius:4px}
+.delete-btn{background:#dc3545;color:white;border:none;padding:7px 12px;cursor:pointer;border-radius:4px}
+.contact{background:#f4f4f4}
+.whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;color:white;padding:15px;border-radius:50%;text-decoration:none}
+footer{background:#0d47a1;color:white;text-align:center;padding:10px}
+.message{font-weight:bold;margin:10px}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1>Urban Paws</h1>
+<h2>Admin Panel</h2>
+</header>
+
+<section id="adminLogin">
+<h2>Admin Login</h2>
+<input type="email" id="adminEmail" placeholder="Admin Email"><br>
+<input type="password" id="adminPassword" placeholder="Password"><br>
+<button class="btn" onclick="adminLogin()">Login</button>
+<p id="loginMessage" class="message"></p>
+</section>
+
+<section id="manage" style="display:none;">
+<h2>Manage Bookings</h2>
+<button class="btn" onclick="adminLogout()">Logout</button>
+
+<div id="editForm" style="display:none; background:white; padding:20px; max-width:600px; margin:30px auto;">
+<h3>Edit Booking</h3>
+<input id="name" type="text" placeholder="Name"><br>
+<input id="phone" type="tel" maxlength="10" placeholder="Phone"><br>
+<input id="dog" type="text" placeholder="Dog Name"><br>
+<select id="service">
+<option value="">Select Service</option>
+<option value="Daily Walk - ₹199">Daily Walk - ₹199</option>
+<option value="Weekly Plan - ₹999">Weekly Plan - ₹999</option>
+</select><br>
+<input id="bookingDate" type="date"><br>
+<input id="bookingTime" type="time"><br>
+<input id="updateId" type="hidden">
+<button class="btn" onclick="updateBooking()">Update Booking</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>ID</th><th>Name</th><th>Phone</th><th>Dog Name</th><th>Service</th><th>Date</th><th>Time</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="bookingTableBody"></tbody>
+</table>
+</section>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCGmnBfhp6CRpFF4apsE2Zn2ZlTOm2ejr8",
+    authDomain: "urban-paws-2023.firebaseapp.com",
+    projectId: "urban-paws-2023",
+    storageBucket: "urban-paws-2023.firebasestorage.app",
+    messagingSenderId: "291097528618",
+    appId: "1:291097528618:web:533e0f963196f5ca1bf653"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const bookingsCollection = collection(db, "bookings");
+
+async function adminLogin() {
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPassword").value;
+    const message = document.getElementById("loginMessage");
+
+    if (!email || !password) {
+        message.innerText = "Please enter email and password.";
+        return;
+    }
+
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        message.innerText = "Login successful!";
+    } catch (error) {
+        console.error("Login Error:", error);
+        message.innerText = "Invalid email or password.";
+    }
+}
+
+async function adminLogout() {
+    await signOut(auth);
+}
+
+async function displayBookings() {
+    const tableBody = document.getElementById("bookingTableBody");
+    tableBody.innerHTML = "";
+
+    try {
+        const querySnapshot = await getDocs(bookingsCollection);
+        let count = 1;
+
+        querySnapshot.forEach(function(bookingDoc) {
+            const booking = bookingDoc.data();
+
+            const row = `
+                <tr>
+                    <td>${count++}</td>
+                    <td>${booking.name || ""}</td>
+                    <td>${booking.phone || ""}</td>
+                    <td>${booking.dog || ""}</td>
+                    <td>${booking.service || ""}</td>
+                    <td>${booking.date || ""}</td>
+                    <td>${booking.time || ""}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editBooking('${bookingDoc.id}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteBooking('${bookingDoc.id}')">Delete</button>
+                    </td>
+                </tr>`;
+            tableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error("View Error:", error);
+        alert("Error loading bookings.");
+    }
+}
+
+async function editBooking(id) {
+    try {
+        const bookingDoc = await getDoc(doc(db, "bookings", id));
+        if (!bookingDoc.exists()) {
+            alert("Booking not found.");
+            return;
+        }
+
+        const booking = bookingDoc.data();
+        document.getElementById("name").value = booking.name || "";
+        document.getElementById("phone").value = booking.phone || "";
+        document.getElementById("dog").value = booking.dog || "";
+        document.getElementById("service").value = booking.service || "";
+        document.getElementById("bookingDate").value = booking.date || "";
+        document.getElementById("bookingTime").value = booking.time || "";
+        document.getElementById("updateId").value = id;
+
+        document.getElementById("editForm").style.display = "block";
+        window.scrollTo({top: document.getElementById("editForm").offsetTop, behavior: "smooth"});
+    } catch (error) {
+        console.error("Edit Error:", error);
+        alert("Error loading booking.");
+    }
+}
+
+async function updateBooking() {
+    const id = document.getElementById("updateId").value;
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const dog = document.getElementById("dog").value.trim();
+    const service = document.getElementById("service").value;
+    const date = document.getElementById("bookingDate").value;
+    const time = document.getElementById("bookingTime").value;
+
+    if (!id || !name || !phone || !dog || !service || !date || !time) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    try {
+        await updateDoc(doc(db, "bookings", id), {
+            name, phone, dog, service, date, time
+        });
+
+        alert("Booking updated successfully!");
+        document.getElementById("editForm").style.display = "none";
+        clearForm();
+        displayBookings();
+    } catch (error) {
+        console.error("Update Error:", error);
+        alert("Error updating booking.");
+    }
+}
+
+async function deleteBooking(id) {
+    if (!confirm("Are you sure you want to delete this booking?")) return;
+
+    try {
+        await deleteDoc(doc(db, "bookings", id));
+        alert("Booking deleted successfully!");
+        displayBookings();
+    } catch (error) {
+        console.error("Delete Error:", error);
+        alert("Error deleting booking.");
+    }
+}
+
+function clearForm() {
+    document.getElementById("name").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("dog").value = "";
+    document.getElementById("service").value = "";
+    document.getElementById("bookingDate").value = "";
+    document.getElementById("bookingTime").value = "";
+    document.getElementById("updateId").value = "";
+}
+
+onAuthStateChanged(auth, (user) => {
+    const loginSection = document.getElementById("adminLogin");
+    const manageSection = document.getElementById("manage");
+
+    if (user) {
+        loginSection.style.display = "none";
+        manageSection.style.display = "block";
+        displayBookings();
+    } else {
+        loginSection.style.display = "block";
+        manageSection.style.display = "none";
+    }
+});
+
+window.adminLogin = adminLogin;
+window.adminLogout = adminLogout;
+window.editBooking = editBooking;
+window.updateBooking = updateBooking;
+window.deleteBooking = deleteBooking;
+</script>
+
+</body>
+</html>
