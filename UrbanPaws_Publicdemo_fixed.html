@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)file:///C:/Users/vaibh/OneDrive/Desktop/UrbanPaws_Public.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urban Paws</title>
+
+
+<style>
+body{
+    font-family:Arial, sans-serif;
+    margin:0;
+    background:#f8f9fa;
+    color:#18324a;
+}
+
+/* HEADER */
+header{
+    background:#06284a;
+    color:white;
+    text-align:center;
+    padding:22px;
+}
+
+header h1{
+    margin:0;
+    font-size:32px;
+}
+
+header h2{
+    margin:5px 0;
+    font-size:16px;
+    color:#ff9d18;
+}
+
+header p{
+    margin:5px 0 0;
+}
+
+/* NAVBAR */
+nav{
+    background:#083b68;
+    padding:14px;
+    text-align:center;
+}
+
+nav a{
+    color:white;
+    margin:0 15px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#ff9d18;
+}
+
+/* HERO - ONLY DESIGN CHANGE */
+.hero{
+    background:
+    linear-gradient(rgba(0,25,50,.22),rgba(0,25,50,.22)),
+    url('dog-bg.png');
+
+    background-size:cover;
+    background-position:center top;
+    background-repeat:no-repeat;
+
+    min-height:500px;
+
+    color:white;
+    text-align:center;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    padding:40px 20px;
+}
+
+.hero h1{
+    font-size:48px;
+    margin:10px 0;
+    text-shadow:0 3px 8px rgba(0,0,0,.5);
+}
+
+.hero p{
+    font-size:20px;
+    margin:10px 0 25px;
+}
+
+/* BUTTON */
+.btn{
+    padding:12px 25px;
+    background:#ff9418;
+    border:none;
+    color:white;
+    cursor:pointer;
+    border-radius:25px;
+    font-weight:bold;
+    font-size:15px;
+}
+
+.btn:hover{
+    background:#e67e00;
+}
+
+/* SECTIONS */
+section{
+    padding:45px 20px;
+    text-align:center;
+}
+
+section h2{
+    color:#06284a;
+}
+
+/* SERVICE BOXES */
+.box{
+    display:inline-block;
+    width:250px;
+    margin:15px;
+    padding:25px 20px;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 5px 18px rgba(0,0,0,.10);
+    transition:.3s;
+}
+
+.box:hover{
+    transform:translateY(-5px);
+}
+
+.box h3{
+    color:#06284a;
+}
+
+.box p{
+    color:#ff8c00;
+    font-weight:bold;
+    font-size:18px;
+}
+
+/* FORM */
+input,select{
+    width:80%;
+    max-width:400px;
+    padding:12px;
+    margin:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+input:focus,select:focus{
+    outline:none;
+    border-color:#ff9418;
+}
+
+
+/* PROFESSIONAL + CUTE BOOKING SECTION */
+#booking{
+    position:relative;
+    overflow:hidden;
+    padding:70px 20px 80px;
+    background:
+        radial-gradient(circle at 8% 20%, rgba(255,157,24,.12) 0 55px, transparent 56px),
+        radial-gradient(circle at 92% 75%, rgba(6,40,74,.08) 0 75px, transparent 76px),
+        linear-gradient(135deg,#fffaf3 0%,#f4f8fb 100%);
+}
+
+#booking::before,
+#booking::after{
+    position:absolute;
+    color:rgba(255,148,24,.10);
+    font-size:90px;
+    transform:rotate(-18deg);
+    pointer-events:none;
+}
+
+#booking::before{
+    content:'🐾';
+    left:7%;
+    top:35px;
+}
+
+#booking::after{
+    content:'🐾';
+    right:7%;
+    bottom:25px;
+    transform:rotate(18deg);
+}
+
+#booking h2{
+    position:relative;
+    z-index:1;
+    margin:0 0 8px;
+    font-size:34px;
+    color:#06284a;
+}
+
+.booking-subtitle{
+    position:relative;
+    z-index:1;
+    margin:0 0 30px;
+    color:#64748b;
+    font-size:16px;
+}
+
+.booking-card{
+    position:relative;
+    z-index:1;
+    width:min(720px,92%);
+    margin:auto;
+    padding:32px 34px;
+    background:rgba(255,255,255,.96);
+    border:1px solid rgba(6,40,74,.08);
+    border-radius:24px;
+    box-shadow:0 18px 45px rgba(6,40,74,.13);
+}
+
+.booking-card::before{
+    content:'🐶';
+    display:block;
+    width:62px;
+    height:62px;
+    line-height:62px;
+    margin:-62px auto 14px;
+    background:#fff3df;
+    border:5px solid white;
+    border-radius:50%;
+    font-size:31px;
+    box-shadow:0 6px 16px rgba(6,40,74,.10);
+}
+
+.booking-card input,
+.booking-card select{
+    width:100%;
+    max-width:none;
+    margin:0 0 14px;
+    padding:14px 16px;
+    border:1px solid #d8dee6;
+    border-radius:12px;
+    background:#fbfcfe;
+    font-size:15px;
+    transition:.2s;
+}
+
+.booking-card input:focus,
+.booking-card select:focus{
+    background:white;
+    border-color:#ff9418;
+    box-shadow:0 0 0 3px rgba(255,148,24,.12);
+}
+
+.booking-dates{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.booking-dates input{
+    margin-bottom:14px;
+}
+
+.booking-actions{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-top:5px;
+}
+
+.booking-actions .btn{
+    min-width:190px;
+    padding:14px 24px;
+}
+
+.booking-actions .whatsapp-btn{
+    background:#25D366;
+}
+
+.booking-actions .whatsapp-btn:hover{
+    background:#1fb85a;
+}
+
+.booking-note{
+    margin:18px 0 0;
+    text-align:center;
+    color:#7a8795;
+    font-size:13px;
+}
+
+@media(max-width:700px){
+    #booking{padding:60px 15px 70px;}
+    #booking h2{font-size:29px;}
+    .booking-card{padding:28px 20px;}
+    .booking-dates{grid-template-columns:1fr;gap:0;}
+    .booking-actions .btn{width:100%;}
+}
+
+/* TABLE */
+table{
+    width:95%;
+    margin:30px auto;
+    border-collapse:collapse;
+    background:white;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:12px;
+    text-align:center;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+}
+
+/* ADMIN BUTTONS */
+.edit-btn{
+    background:#28a745;
+    color:white;
+    border:none;
+    padding:7px 12px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.delete-btn{
+    background:#dc3545;
+    color:white;
+    border:none;
+    padding:7px 12px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+/* CONTACT */
+.contact{
+    background:#eef3f7;
+}
+
+.contact p{
+    margin:10px;
+}
+
+/* WHATSAPP */
+.whatsapp{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#25D366;
+    color:white;
+    padding:15px;
+    border-radius:50%;
+    text-decoration:none;
+    font-size:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
+/* FOOTER */
+footer{
+    background:#06284a;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
+
+.message{
+    font-weight:bold;
+    margin:10px;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+    .hero{
+        min-height:420px;
+        padding:30px 15px;
+    }
+
+    .hero h1{
+        font-size:34px;
+    }
+
+    .hero p{
+        font-size:17px;
+    }
+
+    nav a{
+        margin:0 6px;
+        font-size:13px;
+    }
+
+    .box{
+        width:80%;
+    }
+
+    input,select{
+        width:90%;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1>Urban Paws</h1>
+<h2>Vaibhavi Bhosale</h2>
+<p>City Walks, Happy Paws</p>
+</header>
+
+<nav>
+<a href="#">Home</a>
+<a href="#services">Services</a>
+<a href="#booking">Booking</a>
+<a href="#contact">Contact</a>
+</nav>
+
+<div class="hero">
+<h1>Premium Dog Walking Services</h1>
+<p>Book instantly &amp; pay online</p>
+</div>
+
+<section id="services">
+<h2>🐾Our Services🐾</h2>
+<div class="box"><h3>Daily Walk</h3><p>₹199 per walk</p></div>
+<div class="box"><h3>Weekly Plan</h3><p>₹999 per week</p></div>
+</section>
+
+<section id="booking">
+<h2>🐾 Book Your Walk🐾</h2>
+<p class="booking-subtitle">Give your furry friend a happy, safe and refreshing walk.</p>
+
+<div class="booking-card">
+<input id="name" type="text" placeholder="Your Name">
+<input id="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit Phone">
+<input id="dog" type="text" placeholder="Dog Name🐾">
+
+<select id="service">
+<option value="">Select Service</option>
+<option value="❤️Daily Walk - ₹199">❤️Daily Walk - ₹199</option>
+<option value="❤️Weekly Plan - ₹999">❤️Weekly Plan - ₹999</option>
+</select>
+
+<div class="booking-dates">
+<input id="bookingDate" type="date" aria-label="Booking Date" min="2026-10-08">
+<input id="bookingTime" type="time" aria-label="Booking Time">
+</div>
+
+<div class="booking-actions">
+<button class="btn" onclick="addBooking()">🐾 Insert Booking</button>
+<button class="btn whatsapp-btn" onclick="bookNow()">💬 Book via WhatsApp</button>
+</div>
+
+<p class="booking-note">🔒 Your booking details are securely stored for appointment management.</p>
+</div>
+</section>
+
+<section id="contact" class="contact">
+<h2>🐾Contact Us🐾</h2>
+<p>📞 8779962965</p>
+<p>📧 bhosalevaibhavi461@gmail.com</p>
+<p>📍 Mumbai</p>
+</section>
+
+<a class="whatsapp" href="https://wa.me/918779962965">💬</a>
+
+<footer><p>© 2026 Urban Paws</p></footer>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCGmnBfhp6CRpFF4apsE2Zn2ZlTOm2ejr8",
+    authDomain: "urban-paws-2023.firebaseapp.com",
+    projectId: "urban-paws-2023",
+    storageBucket: "urban-paws-2023.firebasestorage.app",
+    messagingSenderId: "291097528618",
+    appId: "1:291097528618:web:533e0f963196f5ca1bf653"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const bookingsCollection = collection(db, "bookings");
+
+let isSubmitting = false;
+
+function setMinimumDate() {
+    const dateInput = document.getElementById("bookingDate");
+    if (dateInput) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth()+1).padStart(2,"0");
+        const dd = String(today.getDate()).padStart(2,"0");
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+    }
+}
+
+async function addBooking() {
+    if (isSubmitting) return;
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const dog = document.getElementById("dog").value.trim();
+    const service = document.getElementById("service").value;
+    const date = document.getElementById("bookingDate").value;
+    const time = document.getElementById("bookingTime").value;
+
+    if (!name || !phone || !dog || !service || !date || !time) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+    }
+
+    isSubmitting = true;
+
+    try {
+        await addDoc(bookingsCollection, {
+            name,
+            phone,
+            dog,
+            service,
+            date,
+            time,
+            createdAt: new Date()
+        });
+
+        alert("Booking added successfully!");
+        clearForm();
+    } catch (error) {
+        console.error("Insert Error:", error);
+        alert("Error adding booking. Please try again.");
+    } finally {
+        isSubmitting = false;
+    }
+}
+
+function clearForm() {
+    document.getElementById("name").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("dog").value = "";
+    document.getElementById("service").value = "";
+    document.getElementById("bookingDate").value = "";
+    document.getElementById("bookingTime").value = "";
+}
+
+function bookNow() {
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const dog = document.getElementById("dog").value.trim();
+    const service = document.getElementById("service").value;
+    const date = document.getElementById("bookingDate").value;
+    const time = document.getElementById("bookingTime").value;
+
+    if (!name || !phone || !dog || !date || !time) {
+        alert("Please fill your name, phone, dog name, date and time.");
+        return;
+    }
+
+    const message = `Hello Urban Paws!
+Name: ${name}
+Phone: ${phone}
+Dog: ${dog}
+Service: ${service}
+Date: ${date}
+Time: ${time}`;
+
+    const url = "https://wa.me/918779962965?text=" + encodeURIComponent(message);
+    window.open(url, "_blank");
+}
+
+setMinimumDate();
+window.addBooking = addBooking;
+window.bookNow = bookNow;
+</script>
+
+
+
+</body></html>
